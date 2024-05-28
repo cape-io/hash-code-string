@@ -7,3 +7,7 @@ export const hashString = (str) => encode64(codesToString(num32toBytes(hashCode(
 export const decode64 = (str) => atob(str.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, ''))
 export const stringToCodes = (str) => Array.from(str).map(x => x.charCodeAt())
 export const bytesToNum32 = (bytes) => bytes.slice(0, 4).reduce((num, byte, i) => (num | (byte << (i * 8))), 0)
+export const hashToNum32 = (str) => bytesToNum32(stringToCodes(decode64(str)))
+
+console.log(hashString('This is a long string that needs to be hashed'))
+console.log(hashToNum32(hashString('This is a long string that needs to be hashed')))
