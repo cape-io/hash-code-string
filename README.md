@@ -2,7 +2,7 @@
 
 ## Overview
 
-hash-code-string is a small utility package to convert long strings into shorter, hash-like strings. It provides functions to create hashes, encode them in a URL-safe base64 format, and decode them back into bytes, or a 32 bit number if desired. Limited to 32 bits of uniqueness. No dependencies. Assumes environment has `Uint8Array`, `Math.imul`, and `btoa`.
+hash-code-string is a small utility package to convert long strings into shorter, hash-like strings. It provides functions to create hashes, encode them in a URL-safe base64 format, and decode them back into bytes, or a 32 bit number if desired. Limited to 32 bits of uniqueness. No dependencies, the hashing code is 5 lines. Assumes environment has `Uint8Array`, `Math.imul`, and `btoa`.
 
 ## Installation
 
@@ -56,8 +56,8 @@ A Uint8Array containing 4 bytes.
 Converts an array of byte values to a string.
 
 **Parameters:**
+* bytes: An array of bytes.
 
-bytes: An array of bytes.
 **Returns:**
 
 A string representing the byte values.
@@ -67,7 +67,7 @@ Encodes a string into a URL-safe base64 format.
 
 **Parameters:**
 
-str: The input string to encode.
+* str: The input string to encode.
 
 **Returns:**
 
@@ -78,7 +78,7 @@ Creates a hash of the input string and encodes it in URL-safe base64 format.
 
 **Parameters:**
 
-str: The input string to hash and encode.
+* str: The input string to hash and encode.
 
 **Returns:**
 
@@ -91,6 +91,7 @@ Decodes a URL-safe base64 string.
 * str: The URL-safe base64 string to decode.
 
 **Returns:**
+
 The decoded string.
 
 ### `stringToCodes(str: string): number[]`
@@ -100,6 +101,7 @@ Converts a string to an array of character codes.
 * str: The input string.
 
 **Returns:**
+
 An array of character codes.
 
 ### `bytesToNum32(bytes: Uint8Array): number`
@@ -109,6 +111,7 @@ Converts the first 4 elements of a byte array back to a 32-bit number.
 * bytes: An array of bytes.
 
 **Returns:**
+
 A 32-bit integer.
 
 ## Example
