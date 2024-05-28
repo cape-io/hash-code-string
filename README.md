@@ -2,7 +2,7 @@
 
 ## Overview
 
-hash-code-string is a small utility package to convert long strings into shorter, hash-like strings. It provides functions to create hashes, encode them in a URL-safe base64 format, and decode them back into bytes, or a 32 bit number if desired. Limited to 32 bits of uniqueness.
+hash-code-string is a small utility package to convert long strings into shorter, hash-like strings. It provides functions to create hashes, encode them in a URL-safe base64 format, and decode them back into bytes, or a 32 bit number if desired. Limited to 32 bits of uniqueness. No dependencies. Assumes environment has `Uint8Array`, `Math.imul`, and `btoa`.
 
 ## Installation
 
@@ -17,15 +17,15 @@ pnpm install hash-code-string
 ## Usage
 
 ```javascript
-import { hashString } from 'hash-code-string';
+import { hashString, hashToNum32 } from 'hash-code-string';
 
 // Example usage
 const longString = "This is a long string that needs to be hashed";
 const hash = hashString(longString);
-console.log(`Hash: ${hash}`); // Hash: ExampleOutput
+console.log(`Hash: ${hash}`); // Hash: g3g2qw
 
-const decodedHash = decode64(hash);
-console.log(`Decoded Hash: ${decodedHash}`); // Decoded Hash: ExampleOutput
+const decodedHash = hashToNum32(hash);
+console.log(`Decoded Hash: ${decodedHash}`); // Decoded Hash: -1422493565
 ```
 
 ## API
@@ -35,74 +35,83 @@ Creates a hash code number from a string similar to Java's String.hashCode metho
 
 **Parameters:**
 
-str: The input string to hash.
-Returns:
+* str: The input string to hash.
+
+**Returns:**
 
 A 32-bit integer hash code.
-num32toBytes(num: number): Uint8Array
+
+### `num32toBytes(num: number): Uint8Array`
 Splits a 32-bit number into an array of 4 bytes.
 
 **Parameters:**
 
-num: The 32-bit integer to split.
-Returns:
+* num: The 32-bit integer to split.
+
+**Returns:**
 
 A Uint8Array containing 4 bytes.
-codesToString(bytes: Uint8Array): string
+
+### `codesToString(bytes: Uint8Array): string`
 Converts an array of byte values to a string.
 
 **Parameters:**
 
 bytes: An array of bytes.
-Returns:
+**Returns:**
 
 A string representing the byte values.
-encode64(str: string): string
+
+### `encode64(str: string): string`
 Encodes a string into a URL-safe base64 format.
 
 **Parameters:**
 
 str: The input string to encode.
-Returns:
+
+**Returns:**
 
 A URL-safe base64 encoded string.
-hashString(str: string): string
+
+### `hashString(str: string): string`
 Creates a hash of the input string and encodes it in URL-safe base64 format.
 
 **Parameters:**
 
 str: The input string to hash and encode.
-Returns:
+
+**Returns:**
 
 A URL-safe base64 encoded hash string.
-decode64(str: string): string
+
+### `decode64(str: string): string`
 Decodes a URL-safe base64 string.
 
 **Parameters:**
+* str: The URL-safe base64 string to decode.
 
-str: The URL-safe base64 string to decode.
-Returns:
-
+**Returns:**
 The decoded string.
-stringToCodes(str: string): number[]
+
+### `stringToCodes(str: string): number[]`
 Converts a string to an array of character codes.
 
 **Parameters:**
+* str: The input string.
 
-str: The input string.
-Returns:
-
+**Returns:**
 An array of character codes.
-bytesToNum32(bytes: Uint8Array): number
+
+### `bytesToNum32(bytes: Uint8Array): number`
 Converts the first 4 elements of a byte array back to a 32-bit number.
 
 **Parameters:**
+* bytes: An array of bytes.
 
-bytes: An array of bytes.
-Returns:
-
+**Returns:**
 A 32-bit integer.
-Example
+
+## Example
 
 ```javascript
 const str = "example";
@@ -126,34 +135,3 @@ Contributions are welcome! Please open an issue or submit a pull request on GitH
 ## License
 
 This project is licensed under the ISC License. See the LICENSE file for details.
-
-
-Turn a long string into a short one.
-
-* `hashCode()` - Create number like Java String hashCode() Method.
-* `num32toBytes()` - Takes a 32 bit number and splits it into an array of 4 bytes.
-* `codesToString()` - Turns array into a string ready for `btoa()` by converting each byte to a char code.
-* `encode64()` - Url safe wrapper around `btoa`.
-* `hashString()` - Put it all together, by flowing through `hashCode` -> `num32toBytes` -> `codesToString` -> `encode64`
-
-Convenience/sanity functions:
-
-* `decode64` - Url safe wrapper around `atob`
-* `stringToCodes()` - Inverse of `codesToString`. Takes a string and turns into an array of char codes.
-* `bytesToNum32()` - Takes first 4 elements of an array of byte numbers and coverts them to a 32 bit number.
-
-Small package consisting of the following code:
-
-```javascript
-export const hashCode = (str) => [...str].reduce((s, c) => Math.imul(31, s) + c.charCodeAt() | 0, 0)
-export const num32toBytes = (num) => new Uint8Array([0, 8, 16, 24].map((x) => num >> x))
-export const codesToString = (bytes) => String.fromCharCode(...bytes)
-export const encode64 = (str) => btoa(str).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
-export const hashString = (str) => encode64(codesToString(num32toBytes(hashCode(str))))
-
-export const decode64 = (str) => atob(str.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, ''))
-export const stringToCodes = (str) => Array.from(str).map(x => x.charCodeAt())
-export const bytesToNum32 = (bytes) => bytes.slice(0, 4).reduce((num, byte, i) => (num | (byte << (i * 8))), 0)
-```
-
-No tests, no benchmarks, no dependencies. Assumes environment has `Uint8Array`, `Math.imul`, and `btoa`.
